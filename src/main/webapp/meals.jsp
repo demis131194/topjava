@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time"%>
 <html>
 <head>
     <title>Title</title>
@@ -9,8 +10,8 @@
 <hr>
 <h2>Meals</h2>
 <br>
-<table>
-    <thead style="border: 2px">
+<table border="2">
+    <thead>
     <tr>
         <th>Description</th>
         <th>Date</th>
@@ -23,7 +24,7 @@
         <tbody style="${meal.excess ? "background-color: red" : "background-color: green"}">
         <tr>
             <th>${meal.description}</th>
-            <th>${meal.dateTime}</th>
+            <th><javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd HH:mm"/></th>
             <th>${meal.calories}</th>
             <th>${meal.excess}</th>
         </tr>
