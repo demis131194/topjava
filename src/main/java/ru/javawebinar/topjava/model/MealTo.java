@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class MealTo {
+    private final Long id;
+
     private final LocalDateTime dateTime;
 
     private final String description;
@@ -11,11 +14,16 @@ public class MealTo {
 
     private final boolean excess;
 
-    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Long id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.excess = excess;
+    }
+
+    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess) {
+        this(null, dateTime, description, calories, excess);
     }
 
     public LocalDateTime getDateTime() {
@@ -32,6 +40,23 @@ public class MealTo {
 
     public boolean isExcess() {
         return excess;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MealTo mealTo = (MealTo) o;
+        return Objects.equals(id, mealTo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
