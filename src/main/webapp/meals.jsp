@@ -18,6 +18,7 @@
         <th>Date</th>
         <th>Calories</th>
         <th>Exceeded</th>
+        <th>Action</th>
     </tr>
 
     </thead>
@@ -29,6 +30,7 @@
             <th><javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd HH:mm"/></th>
             <th>${meal.calories}</th>
             <th>${meal.excess}</th>
+            <th><a href="${pageContext.request.contextPath}/meals?action=delete&mealId=${meal.id}">Delete</a></th>
         </tr>
         </tbody>
     </c:forEach>

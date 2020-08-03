@@ -30,6 +30,15 @@ public class MealsServlet extends HttpServlet {
         req.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
         resp.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
 
+        String action = req.getParameter("action");
+
+        if ("delete".equals(action)) {
+            String mealStrId = req.getParameter("mealId");
+            Long id = getIdFromStr(mealStrId);
+            repo.delete(id);
+        }
+
+
         logger.debug("forward to meals");
 
         List<MealTo> meals = MealsUtil.filteredByStreams(repo.findAll(), LocalTime.MIN, LocalTime.MAX, 2000);
@@ -43,13 +52,12 @@ public class MealsServlet extends HttpServlet {
         resp.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
 
         logger.debug("post to meals");
-        String mealStrId = req.getParameter("mealId");
-        Long id = null;
-        try {
-            id = Long.valueOf(mealStrId);
-        } catch (NumberFormatException ignored) {
 
-        }
+
+
+        String mealStrId = req.getParameter("mealId");
+        Long id = getIdFromStr(mealStrId);
+
         String description = req.getParameter("description");
 
         String mealDate = req.getParameter("mealDate");
@@ -66,5 +74,14 @@ public class MealsServlet extends HttpServlet {
         List<MealTo> meals = MealsUtil.filteredByStreams(repo.findAll(), LocalTime.MIN, LocalTime.MAX, 2000);
         req.setAttribute("meals", meals);
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+    }
+
+    private Long getIdFromStr(String mealStrId) {
+        try {
+            return Long.valueOf(mealStrId);
+        } catch (NumberFormatException ignored) {
+
+        }
+        return null;
     }
 }
