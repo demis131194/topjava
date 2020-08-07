@@ -22,7 +22,31 @@
     <hr/>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
-    <br><br>
+    <br>
+    <br>
+    <form action="meals" method="post">
+        <input type="hidden" value="filter" name="action">
+        <div>
+            <label for="fromDate"></label>
+            <input id="fromDate" type="date" name="fromDate" value="${fromDate}"/>
+        </div>
+        <div>
+            <label for="toDate"></label>
+            <input id="toDate" type="date" name="toDate" value="${toDate}"/>
+        </div>
+        <div>
+            <label for="fromTime"></label>
+            <input id="fromTime" type="time" name="fromTime" value="${fromTime}"/>
+        </div>
+        <div>
+            <label for="toTime"></label>
+            <input id="toTime" type="time" name="toTime" value="${toTime}"/>
+        </div>
+        <div>
+            <button type="submit">Filter</button>
+        </div>
+    </form>
+    <hr>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
