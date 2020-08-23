@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public class InMemoryAdminRestControllerTest {
@@ -47,7 +48,7 @@ public class InMemoryAdminRestControllerTest {
 
     @Test
     public void deleteNotFound() throws Exception {
-        Assert.assertThrows(NotFoundException.class, () -> controller.delete(10));
+        Assert.assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
         Scanner scanner;
     }
 }
