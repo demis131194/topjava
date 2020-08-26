@@ -1,19 +1,43 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id"),
+        @NamedQuery(name = Meal.ALL_ORDERED, query = "SELECT Meal FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.ALL_HALF_OPEN_ORDERED, query = "SELECT Meal FROM Meal m WHERE m.user.id=:userId " +
+                "AND (m.dateTime>=:startDateTime AND m.dateTime<:endDateTime) ORDER BY m.dateTime DESC")
+})
+@Entity
+@Table(name = "meals", uniqueConstraints = @UniqueConstraint(name = "user_id_date_time_unique_constraint",
+        columnNames = {"user_id", "date_time"}))
 public class Meal extends AbstractBaseEntity {
+
+    public static final String DELETE = "Meal.delete";
+    public static final String ALL_ORDERED = "Meal.allOrdered";
+    public static final String ALL_HALF_OPEN_ORDERED = "Meal.allHalfOpenOrdered";
+
+    @NotNull
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
 
+    @NotBlank
+    @Column(name = "description")
     private String description;
 
+    @NotNull
+    @Positive
+    @Column(name = "calories")
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Meal() {
