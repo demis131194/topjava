@@ -10,9 +10,8 @@ import java.time.LocalTime;
 
 @NamedQueries({
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id"),
-        @NamedQuery(name = Meal.ALL_ORDERED, query = "SELECT Meal FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
-        @NamedQuery(name = Meal.ALL_HALF_OPEN_ORDERED, query = "SELECT Meal FROM Meal m WHERE m.user.id=:userId " +
-                "AND (m.dateTime>=:startDateTime AND m.dateTime<:endDateTime) ORDER BY m.dateTime DESC")
+        @NamedQuery(name = Meal.ALL_ORDERED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.ALL_HALF_OPEN_ORDERED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId AND (m.dateTime>=:startDateTime AND m.dateTime<:endDateTime) ORDER BY m.dateTime DESC")
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = @UniqueConstraint(name = "user_id_date_time_unique_constraint",
