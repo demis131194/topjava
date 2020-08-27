@@ -12,6 +12,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -90,9 +91,10 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenInclusive() throws Exception {
-        MEAL_MATCHER.assertMatch(service.getBetweenInclusive(
+        List<Meal> betweenInclusive = service.getBetweenInclusive(
                 LocalDate.of(2020, Month.JANUARY, 30),
-                LocalDate.of(2020, Month.JANUARY, 30), USER_ID),
+                LocalDate.of(2020, Month.JANUARY, 30), USER_ID);
+        MEAL_MATCHER.assertMatch(betweenInclusive,
                 MEAL3, MEAL2, MEAL1);
     }
 

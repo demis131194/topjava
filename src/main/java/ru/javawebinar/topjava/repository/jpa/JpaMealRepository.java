@@ -23,14 +23,17 @@ public class JpaMealRepository implements MealRepository {
     @Transactional
     public Meal save(Meal meal, int userId) {
 
-        User userRef = entityManager.getReference(User.class, userId);
-        meal.setUser(userRef);
 
         if (meal.isNew()) {
+
+            User userRef = entityManager.getReference(User.class, userId);
+            meal.setUser(userRef);
             entityManager.persist(meal);
             return meal;
+
         } else {
-            return entityManager.merge(meal);
+
+            return meal.getUser() != null && meal.getUser().getId() == userId ? entityManager.merge(meal) : null;
         }
     }
 
@@ -39,7 +42,7 @@ public class JpaMealRepository implements MealRepository {
     public boolean delete(int id, int userId) {
         Meal deletedMeal = entityManager.find(Meal.class, id);
 
-        if (deletedMeal.getUser().getId() == userId) {
+        if (deletedMeal != null && deletedMeal.getUser().getId() == userId) {
             return entityManager.createNamedQuery(Meal.DELETE)
                     .setParameter("id", id)
                     .executeUpdate() != 0;
@@ -51,16 +54,11 @@ public class JpaMealRepository implements MealRepository {
     public Meal get(int id, int userId) {
         Meal meal = entityManager.find(Meal.class, id);
 
-        if (meal != null) {
-            return meal.getUser().getId() == userId ? meal : null;
-        }
-
-        return null;
+        return (meal != null) && (meal.getUser().getId() == userId) ? meal : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-
         return entityManager.createNamedQuery(Meal.ALL_ORDERED, Meal.class)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -69,9 +67,9 @@ public class JpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return entityManager.createNamedQuery(Meal.ALL_HALF_OPEN_ORDERED, Meal.class)
-                .setParameter("id", userId)
-                .setParameter("startDateTime", Timestamp.valueOf(startDateTime))
-                .setParameter("endDatetime", Timestamp.valueOf(endDateTime))
+                .setParameter("userId", userId)
+                .setParameter("startDateTime", startDateTime)
+                .setParameter("endDateTime", endDateTime)
                 .getResultList();
     }
 }
