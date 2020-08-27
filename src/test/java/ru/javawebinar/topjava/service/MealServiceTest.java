@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -8,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.rule.MealTestWatcher;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -29,6 +33,14 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    @Rule
+    public TestWatcher mealTestWatcher = new MealTestWatcher();
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+
+    }
 
     @Test
     public void delete() throws Exception {
