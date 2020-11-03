@@ -1,6 +1,6 @@
 $(document).ready(function () {
     makeEditable({
-        ajaxUrl: "meals/",
+        ajaxUrl: "profile/meals/",
         datatableApi: $("#datatable").DataTable({
             "paging": false,
             "autoWidth": true,
