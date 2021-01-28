@@ -1,15 +1,24 @@
 package ru.javawebinar.topjava.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @NotNull
     private final LocalDateTime dateTime;
 
+    @Max(value = 255, message = "Must be between 0 and 255!")
     private final String description;
 
+    @PositiveOrZero(message = "Must be >= 0!")
     private final int calories;
 
     private final boolean excess;
