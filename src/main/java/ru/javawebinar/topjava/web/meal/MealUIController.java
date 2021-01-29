@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/profile/meals")
@@ -45,13 +46,12 @@ public class MealUIController extends AbstractMealController {
     public ResponseEntity<String> createOrUpdate(@Valid MealTo mealTo, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            StringBuilder errString = new StringBuilder();
 
-            bindingResult.getFieldErrors().forEach(fieldError -> {
-                errString.append(String.format("[%s] : %s\n", fieldError.getField(), fieldError.getDefaultMessage()));
-            });
+            String errors = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> String.format("[%s] : %s\n", fieldError.getField(), fieldError.getDefaultMessage()))
+                    .collect(Collectors.joining("<br/>"));
 
-            return ResponseEntity.unprocessableEntity().body(errString.toString());
+            return ResponseEntity.unprocessableEntity().body(errors);
         }
 
         if (mealTo.isNew()) {
