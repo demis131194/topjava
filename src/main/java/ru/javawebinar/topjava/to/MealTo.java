@@ -1,35 +1,38 @@
 package ru.javawebinar.topjava.to;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private final LocalDateTime dateTime;
 
-    @Max(value = 255, message = "Must be between 0 and 255!")
+    @Size(max = 255)
     private final String description;
 
-    @PositiveOrZero(message = "Must be >= 0!")
+    @PositiveOrZero
     private final int calories;
 
     private final boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
-    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, Boolean excess) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.excess = excess;
+        this.excess = Objects.nonNull(excess) ? excess : false;
     }
 
     public LocalDateTime getDateTime() {
