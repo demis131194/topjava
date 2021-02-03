@@ -14,6 +14,7 @@
             <c:when test="${inputType == 'number'}"><form:input path="${name}" type="number" class="form-control"/></c:when>
             <c:otherwise><form:input path="${name}" class="form-control"/></c:otherwise>
         </c:choose>
-        <div class="invalid-feedback">${status.errorMessage}</div>
+<%--        <div class="invalid-feedback">${status.errorMessage}</div>--%>
+        <form:errors path="${name}" cssClass="text-danger"/>
     </div>
 </spring:bind>
