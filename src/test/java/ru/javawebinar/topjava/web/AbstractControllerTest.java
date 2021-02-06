@@ -14,6 +14,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.javawebinar.topjava.AllActiveProfileResolver;
 import ru.javawebinar.topjava.Profiles;
+import ru.javawebinar.topjava.TestMatcher;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
 
 import javax.annotation.PostConstruct;
 

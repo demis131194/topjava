@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,6 +65,12 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorInfo handleError(HttpServletRequest req, MethodArgumentNotValidException e) {
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+    }
+
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
@@ -76,15 +83,29 @@ public class ExceptionInfoHandler {
     }
 
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, BindException e, boolean logException, ErrorType errorType) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
+        logException(req, logException, errorType, ValidationUtil.getRootCause(e));
+        String detail = compactErrors(e.getBindingResult());
+        return new ErrorInfo(req.getRequestURL(), errorType, detail);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, MethodArgumentNotValidException e, boolean logException, ErrorType errorType) {
+        logException(req, logException, errorType, ValidationUtil.getRootCause(e));
+        String detail = compactErrors(e.getBindingResult());
+        return new ErrorInfo(req.getRequestURL(), errorType, detail);
+    }
+
+    private static String compactErrors(BindingResult bindingResult) {
+        return bindingResult.getFieldErrors().stream()
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .collect(Collectors.joining("<br>"));
+    }
+
+    private static void logException(HttpServletRequest req, boolean logException, ErrorType errorType, Throwable rootCause2) {
+        Throwable rootCause = rootCause2;
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        String detail = e.getBindingResult().getFieldErrors().stream()
-                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.joining("<br>"));
-        return new ErrorInfo(req.getRequestURL(), errorType, detail);
     }
 }
