@@ -13,7 +13,9 @@ function makeEditable(aUrl, datatableOpts, upTable) {
                 "paging": false,
                 "info": true,
                 "language": {
-                    "search": i18n["common.search"]
+                    "search": i18n["common.search"],
+                    "info": i18n["common.info"],
+                    "infoEmpty": i18n["common.infoEmpty"],
                 }
             }
         ));
